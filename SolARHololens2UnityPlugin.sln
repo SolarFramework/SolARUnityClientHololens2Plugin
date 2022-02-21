@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SolARHololens2UnityPlugin", "SolARHololens2UnityPlugin\SolARHololens2UnityPlugin.vcxproj", "{C0A53BE0-31F7-4C20-8D9A-7C803A05F152}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM64 = Debug|ARM64
+		Release|ARM64 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0A53BE0-31F7-4C20-8D9A-7C803A05F152}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{C0A53BE0-31F7-4C20-8D9A-7C803A05F152}.Debug|ARM64.Build.0 = Debug|ARM64
+		{C0A53BE0-31F7-4C20-8D9A-7C803A05F152}.Release|ARM64.ActiveCfg = Release|ARM64
+		{C0A53BE0-31F7-4C20-8D9A-7C803A05F152}.Release|ARM64.Build.0 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {227263F5-E2F7-4465-90CF-4F24B61D24A6}
+	EndGlobalSection
+EndGlobal

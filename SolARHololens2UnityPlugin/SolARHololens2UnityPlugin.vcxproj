@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.200729.8\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.200729.8\build\native\Microsoft.Windows.CppWinRT.props')" />
+  <PropertyGroup Label="Globals">
+    <CppWinRTOptimized>true</CppWinRTOptimized>
+    <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
+    <CppWinRTGenerateWindowsMetadata>true</CppWinRTGenerateWindowsMetadata>
+    <MinimalCoreWin>true</MinimalCoreWin>
+    <ProjectGuid>{c0a53be0-31f7-4c20-8d9a-7c803a05f152}</ProjectGuid>
+    <ProjectName>SolARHololens2UnityPlugin</ProjectName>
+    <RootNamespace>SolARHololens2UnityPlugin</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.17763.0</WindowsTargetPlatformMinVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="PropertySheet.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+    <IncludePath>include;utils\cannon-lib;utils\eigen-3.3.9;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <IncludePath>include;utils\cannon-lib;utils\eigen-3.3.9;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
+      <!--Temporarily disable cppwinrt heap enforcement to work around xaml compiler generated std::shared_ptr use -->
+      <AdditionalOptions Condition="'$(CppWinRTHeapEnforcement)'==''">/DWINRT_NO_MAKE_DETECTION %(AdditionalOptions) /DEIGEN_MPL2_ONLY</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <PreprocessorDefinitions>_WINRT_DLL;WIN32_LEAN_AND_MEAN;WINRT_LEAN_AND_MEAN;%(PreprocessorDefinitions);_XM_NO_INTRINSICS_;NOMINMAX;NODRAWTEXT;_ENABLE_EXTENDED_ALIGNED_STORAGE;_UNICODE;UNICODE;</PreprocessorDefinitions>
+      <AdditionalUsingDirectories>$(WindowsSDK_WindowsMetadata);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>SolARHololens2UnityPlugin.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>EIGEN_MPL2_ONLY;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">C:\Users\jmhenaff\work\poc-artwin-arcloud\SolARHololens2UnityPlugin\SolARHololens2UnityPlugin\utils\Eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+      </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+      </Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>EIGEN_MPL2_ONLY;NDEBUG;%(PreprocessorDefinitions);WIN32_LEAN_AND_MEAN;NOMINMAX;NODRAWTEXT;_ENABLE_EXTENDED_ALIGNED_STORAGE;_UNICODE;UNICODE</PreprocessorDefinitions>
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">C:\Users\jmhenaff\work\poc-artwin-arcloud\SolARHololens2UnityPlugin\SolARHololens2UnityPlugin\utils\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+      </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+      </Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\RMCameraReader.h" />
+    <ClInclude Include="include\SensorScenario.h" />
+    <ClInclude Include="include\StringHelpers.h" />
+    <ClInclude Include="include\Tar.h" />
+    <ClInclude Include="include\Utils.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\AnimatedVector.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\Common\FileUtilities.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\Common\FilterDoubleExponential.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\Common\Intersectable.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\Common\Timer.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\DrawCall.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\FloatingSlate.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\FloatingText.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\MixedReality.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\RecordedValue.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\TrackedHands.h" />
+    <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\ResearchModeApi.h" />
+    <ClInclude Include="include\SolARHololens2ResearchMode.h" />
+    <ClInclude Include="include\TimeConverter.h" />
+    <ClInclude Include="include\VideoFrameProcessor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\RMCameraReader.cpp" />
+    <ClCompile Include="src\SensorScenario.cpp" />
+    <ClCompile Include="src\StringHelpers.cpp" />
+    <ClCompile Include="src\Tar.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\AnimatedVector.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\DrawCall.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\FloatingSlate.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\FloatingText.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\MixedReality.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\RecordedValue.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\TrackedHands.cpp" />
+    <ClCompile Include="src\pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="src\SolARHololens2ResearchMode.cpp" />
+    <ClCompile Include="src\TimeConverter.cpp" />
+    <ClCompile Include="src\VideoFrameProcessor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="src\SolARHololens2ResearchMode.idl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SolARHololens2UnityPlugin.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="PropertySheet.props" />
+    <Text Include="readme.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.200729.8\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.200729.8\build\native\Microsoft.Windows.CppWinRT.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.200729.8\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.200729.8\build\native\Microsoft.Windows.CppWinRT.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.200729.8\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.200729.8\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+  </Target>
+</Project>

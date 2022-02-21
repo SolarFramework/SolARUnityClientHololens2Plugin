@@ -1,0 +1,24 @@
+BasedOnStyle: Google
+IndentWidth: 2
+
+Language: Cpp
+ColumnLimit: 100
+SpacesInParentheses: true
+UseTab: Never
+IndentWidth: 2
+CompactNamespaces: true
+AlignAfterOpenBracket: true
+AllowAllParametersOfDeclarationOnNextLine: true
+BinPackParameters: false
+BreakStringLiterals: true
+BreakBeforeBraces: Allman
+AlignTrailingComments: true
+BinPackArguments: false
+#AllowAllArgumentsOnNextLine: true
+FixNamespaceComments: true
+IndentCaseLabels: false
+ReflowComments: true
+SortIncludes: true
+AccessModifierOffset: -4
+# Test
+NamespaceIndentation: All

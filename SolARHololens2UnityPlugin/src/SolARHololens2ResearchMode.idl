@@ -1,0 +1,94 @@
+/**
+ * @copyright Copyright (c) 2021-2022 B-com http://www.b-com.com/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace SolARHololens2UnityPlugin
+{
+
+enum StreamTypes
+{
+    PV,
+    EYE
+};
+
+enum RMSensorType
+{
+    LEFT_FRONT,
+    LEFT_LEFT,
+    RIGHT_FRONT,
+    RIGHT_RIGHT
+};
+
+runtimeclass SolARHololens2ResearchMode
+{
+    // TODO(jmhenaff): see if builder is possible
+    // Ex: x = builder().EnablePv().EnableVlc(LEFT_FRONT).build(); x.start():
+    void Init();
+    void EnablePv();
+    void EnableVlc(RMSensorType sensorType);
+    void EnableDepth(Boolean isLongThrow);
+    void Update();
+    Boolean EnableRecording();
+    Boolean DisableRecording();
+    void Start();
+    void Stop();
+    Boolean IsRunning();
+
+    UInt8[] GetPvData(
+        out UInt64 timestamp,
+        out double[] PVtoWorldtransform,
+        out float  fx,
+        out float  fy,
+        out UInt32 pixelBufferSize,
+        out UInt32 width,
+        out UInt32 height,
+        Boolean flip);
+    UInt32 GetPvWidth();
+    UInt32 GetPvHeight();
+
+
+    UInt8[] GetVlcData(
+        RMSensorType sensor,
+        out UInt64 timestamp,
+        out double[] VlcToWorldtransform,
+        out float  fx,
+        out float  fy,
+        out UInt32 pixelBufferSize,
+        out UInt32 width,
+        out UInt32 height,
+        Boolean flip);
+    UInt32 GetVlcWidth(RMSensorType sensor);
+    UInt32 GetVlcHeight(RMSensorType sensor);
+
+    // if sensor == DEPTH, result is a concatenation of depth and AB data
+    // pixelBufferSize == total buffer size == 2 * w * h * sizeof(uint16)
+    // TODO(jmhenaff): improve API: custom struct, return all activated sensors at once, ...?
+    // Use Uint16 for depth
+    UInt16[] GetDepthData(
+        out UInt64 timestamp,
+        out double[] PVtoWorldtransform,
+        out float  fx,
+        out float  fy,
+        out UInt32 pixelBufferSize,
+        out UInt32 width,
+        out UInt32 height);
+    UInt32 GetDepthWidth();
+    UInt32 GetDepthHeight();
+
+    // creator
+    SolARHololens2ResearchMode();
+}
+
+} // namespace SolARHololens2UnityPlugin

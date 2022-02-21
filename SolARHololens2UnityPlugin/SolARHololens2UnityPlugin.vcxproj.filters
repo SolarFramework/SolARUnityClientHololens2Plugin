@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\AnimatedVector.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\DrawCall.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\FloatingSlate.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\FloatingText.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\MixedReality.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\RecordedValue.cpp" />
+    <ClCompile Include="utils\cannon-lib\Cannon\TrackedHands.cpp" />
+    <ClCompile Include="src\TimeConverter.cpp" />
+    <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\VideoFrameProcessor.cpp" />
+    <ClCompile Include="src\SolARHololens2ResearchMode.cpp" />
+    <ClCompile Include="src\RMCameraReader.cpp" />
+    <ClCompile Include="src\SensorScenario.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
+    <ClCompile Include="src\Tar.cpp" />
+    <ClCompile Include="src\StringHelpers.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="utils\cannon-lib\Cannon\AnimatedVector.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\Common\FileUtilities.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\Common\FilterDoubleExponential.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\Common\Intersectable.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\Common\Timer.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\DrawCall.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\FloatingSlate.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\FloatingText.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\MixedReality.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\RecordedValue.h" />
+    <ClInclude Include="utils\cannon-lib\Cannon\TrackedHands.h" />
+    <ClInclude Include="include\TimeConverter.h" />
+    <ClInclude Include="include\ResearchModeApi.h" />
+    <ClInclude Include="include\VideoFrameProcessor.h" />
+    <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\SolARHololens2ResearchMode.h" />
+    <ClInclude Include="include\RMCameraReader.h" />
+    <ClInclude Include="include\SensorScenario.h" />
+    <ClInclude Include="include\Utils.h" />
+    <ClInclude Include="include\Tar.h" />
+    <ClInclude Include="include\StringHelpers.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SolARHololens2UnityPlugin.def" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PropertySheet.props" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="src\SolARHololens2ResearchMode.idl" />
+  </ItemGroup>
+</Project>
