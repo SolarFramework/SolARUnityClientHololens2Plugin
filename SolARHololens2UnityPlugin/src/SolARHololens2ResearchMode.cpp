@@ -46,6 +46,36 @@ typedef std::chrono::duration<int64_t, std::ratio<1, 10'000'000>> HundredsOfNano
 namespace winrt::SolARHololens2UnityPlugin::implementation
 {
 
+    void SolARHololens2ResearchMode::SetSpatialCoordinateSystem( Windows::Perception::Spatial::SpatialCoordinateSystem unitySpatialCoodinateSystem)
+    {
+        // m_UnitySpatialCoordinateSystem = std::make_shared<Windows::Perception::Spatial::SpatialCoordinateSystem>(unitySpatialCoodinateSystem);
+
+        auto iUknown = unitySpatialCoodinateSystem.as<IUnknown>();
+        auto refCount = iUknown->AddRef();
+        
+        m_UnitySpatialCoordinateSystem = &unitySpatialCoodinateSystem;
+
+        auto transform = m_UnitySpatialCoordinateSystem->TryGetTransformTo(m_mixedReality.GetWorldCoordinateSystem());
+        auto r = transform.Value();
+
+        // m_UnitySpatialCoordinateSystem = spatialCoordinateSystem;
+
+        //ISpatialCoordinateSystem* result = nullptr;
+        //auto iUknown = spatialCoordinateSystem.as<IUnknown>();
+        //auto refCount = iUknown->AddRef();
+        //auto status = iUknown->QueryInterface(winrt::guid_of<ISpatialCoordinateSystem>(), (void**)(&result));
+        //auto transform = result->TryGetTransformTo(m_mixedReality.GetWorldCoordinateSystem());
+        //auto r = transform.Value();
+
+        //spatialCoordinateSystem.as<IUnknown>()->QueryInterface(__uuidof(ISpatialCoordinateSystem), &result);
+        //IUnknown::QueryInterface(winrt::guid_of<ISpatialCoordinateSystem>(), &result);
+
+        // result->TryGetTransformTo();
+
+    }
+
+
+
     void SolARHololens2ResearchMode::Init()
     {
         m_recording = false;
@@ -262,6 +292,10 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
         }
 
         auto worldCoordinate = m_mixedReality.GetWorldCoordinateSystem();
+        
+        //auto transform = m_UnitySpatialCoordinateSystem->TryGetTransformTo(m_mixedReality.GetWorldCoordinateSystem());
+        //auto r = transform.Value();
+        //auto worldCoordinate = *m_UnitySpatialCoordinateSystem;
 
         if (m_sensorScenario)
         {
@@ -455,7 +489,8 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
         uint32_t& pixelBufferSize,
         uint32_t& width,
         uint32_t& height,
-        bool flip)
+        bool flip,
+        winrt::Windows::Perception::Spatial::SpatialCoordinateSystem unitySpatialCoordinateSytem)
     {
         // TODO(jmhenaff): make m_sensorScenario->m_cameraReaders private, and make this check
         // in a m_sensorScenario method (e.g. getVlcSensorData(sensor, params....)
@@ -466,7 +501,7 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
       }
 
       return m_sensorScenario->m_cameraReaders[toHololensRMSensorType( sensor )]->getVlcSensorData(
-          timestamp, PVtoWorldtransform, pixelBufferSize, width, height, flip );
+          timestamp, PVtoWorldtransform, pixelBufferSize, width, height, flip, unitySpatialCoordinateSytem );
     }
 
     uint32_t SolARHololens2ResearchMode::GetDepthWidth()

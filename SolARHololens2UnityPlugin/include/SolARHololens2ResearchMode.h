@@ -54,6 +54,8 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
 
         SolARHololens2ResearchMode() = default;
 
+        void SetSpatialCoordinateSystem( Windows::Perception::Spatial::SpatialCoordinateSystem unitySpatialCoodinateSystem );
+
         void Init();
         void EnablePv();
         void EnableVlc(RMSensorType sensorType);
@@ -93,7 +95,8 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
                                        uint32_t& pixelBufferSize,
                                        uint32_t& width,
                                        uint32_t& height,
-                                       bool flip = false);
+                                       bool flip,
+                                       winrt::Windows::Perception::Spatial::SpatialCoordinateSystem unitySpatialCoordinateSytem);
         uint32_t GetDepthWidth();
         uint32_t GetDepthHeight();
         com_array<uint16_t> GetDepthData( uint64_t& timestamp,
@@ -156,6 +159,9 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
         PVFrame          m_RGBFrame;
         std::atomic_bool m_RGBTextureUpdated = false;
 
+        // std::shared_ptr<winrt::Windows::Perception::Spatial::SpatialCoordinateSystem> m_UnitySpatialCoordinateSystem;
+        winrt::Windows::Perception::Spatial::SpatialCoordinateSystem* m_UnitySpatialCoordinateSystem = nullptr;
+
         // Research Mode
 
         //// List of camera to activate
@@ -167,7 +173,6 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
         //    ResearchModeSensorType::RIGHT_RIGHT*/
         //};
         std::unique_ptr<SensorScenario> m_sensorScenario = nullptr;
-
     };
 }
 namespace winrt::SolARHololens2UnityPlugin::factory_implementation

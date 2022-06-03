@@ -284,7 +284,8 @@ void RMCameraReader::DumpFrameLocations()
     m_frameLocations.clear();
 }
 
-winrt::com_array<uint8_t> RMCameraReader::getVlcSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height, bool flip)
+winrt::com_array<uint8_t> RMCameraReader::getVlcSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height, bool flip,
+    winrt::Windows::Perception::Spatial::SpatialCoordinateSystem unitySpatialCoordinateSytem)
 {
     std::lock_guard<std::mutex> reader_guard(m_sensorFrameMutex);
     if ( m_pSensorFrame && IsNewTimestamp( m_pSensorFrame ) )
@@ -357,6 +358,29 @@ winrt::com_array<uint8_t> RMCameraReader::getVlcSensorData(uint64_t& timestamp, 
               tempBuffer[x + y * width] = pImage[x + ( height - y - 1 ) * width];
             }
           }
+        }
+
+        // DEBUG JMH
+        {
+
+          auto timestamp = PerceptionTimestampHelper::FromSystemRelativeTargetTime(
+              HundredsOfNanoseconds( checkAndConvertUnsigned( m_prevTimestamp ) ) );
+          auto location = m_locator.TryLocateAtTimestamp( timestamp, unitySpatialCoordinateSytem );
+
+          if ( !location )
+          {
+            return winrt::com_array<uint8_t>();
+          }
+
+          const float4x4 dynamicNodeToCoordinateSystem =
+              make_float4x4_from_quaternion( location.Orientation() ) *
+              make_float4x4_translation( location.Position() );
+          auto absoluteTimestamp = m_converter
+                                       .RelativeTicksToAbsoluteTicks(
+                                           HundredsOfNanoseconds( (long long)m_prevTimestamp ) )
+                                       .count();
+
+          m_frameLocation = FrameLocation{ absoluteTimestamp, dynamicNodeToCoordinateSystem };
         }
 
         std::array<double, 16> VLCtoWorldtransform_values;
@@ -901,6 +925,10 @@ bool RMCameraReader::updateFrameLocation()
 
     auto timestamp = PerceptionTimestampHelper::FromSystemRelativeTargetTime(HundredsOfNanoseconds(checkAndConvertUnsigned(m_prevTimestamp)));
     auto location = m_locator.TryLocateAtTimestamp(timestamp, m_worldCoordSystem);
+
+    //ISpatialCoordinateSystem* m_UnitySpatialCoordinateSystem = nullptr;
+    //spatialCoordinateSystem.as<IUnknown>()->QueryInterface(winrt::guid_of<ISpatialCoordinateSystem>(), (void**)(&m_UnitySpatialCoordinateSystem));
+    //auto location = m_locator.TryLocateAtTimestamp(timestamp, m_worldCoordSystem);
 
     if (!location)
     {

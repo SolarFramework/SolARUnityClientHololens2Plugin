@@ -85,7 +85,7 @@ public:
 	}
 
 //	winrt::com_array<uint8_t> getSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height);
-	winrt::com_array<uint8_t> getVlcSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height, bool flip);
+	winrt::com_array<uint8_t> getVlcSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height, bool flip, winrt::Windows::Perception::Spatial::SpatialCoordinateSystem unitySpatialCoordinateSytem);
 	winrt::com_array<uint16_t> getDepthSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height);
 	uint32_t getWidth();
 	uint32_t getHeight();
