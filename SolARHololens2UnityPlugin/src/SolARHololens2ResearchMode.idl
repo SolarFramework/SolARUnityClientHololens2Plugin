@@ -72,8 +72,7 @@ runtimeclass SolARHololens2ResearchMode
         out UInt32 pixelBufferSize,
         out UInt32 width,
         out UInt32 height,
-        Boolean flip,
-        Windows.Perception.Spatial.SpatialCoordinateSystem spatialCoordinateSystem);
+        Boolean flip);
     UInt32 GetVlcWidth(RMSensorType sensor);
     UInt32 GetVlcHeight(RMSensorType sensor);
 

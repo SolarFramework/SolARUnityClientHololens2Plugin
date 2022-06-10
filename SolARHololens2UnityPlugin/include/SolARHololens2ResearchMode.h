@@ -95,8 +95,7 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
                                        uint32_t& pixelBufferSize,
                                        uint32_t& width,
                                        uint32_t& height,
-                                       bool flip,
-                                       winrt::Windows::Perception::Spatial::SpatialCoordinateSystem unitySpatialCoordinateSytem);
+                                       bool flip);
         uint32_t GetDepthWidth();
         uint32_t GetDepthHeight();
         com_array<uint16_t> GetDepthData( uint64_t& timestamp,
@@ -160,7 +159,7 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
         std::atomic_bool m_RGBTextureUpdated = false;
 
         // std::shared_ptr<winrt::Windows::Perception::Spatial::SpatialCoordinateSystem> m_UnitySpatialCoordinateSystem;
-        winrt::Windows::Perception::Spatial::SpatialCoordinateSystem* m_UnitySpatialCoordinateSystem = nullptr;
+        winrt::Windows::Perception::Spatial::SpatialCoordinateSystem m_UnitySpatialCoordinateSystem { nullptr };
 
         // Research Mode
 

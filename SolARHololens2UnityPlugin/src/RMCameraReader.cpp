@@ -284,8 +284,7 @@ void RMCameraReader::DumpFrameLocations()
     m_frameLocations.clear();
 }
 
-winrt::com_array<uint8_t> RMCameraReader::getVlcSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height, bool flip,
-    winrt::Windows::Perception::Spatial::SpatialCoordinateSystem unitySpatialCoordinateSytem)
+winrt::com_array<uint8_t> RMCameraReader::getVlcSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height, bool flip)
 {
     std::lock_guard<std::mutex> reader_guard(m_sensorFrameMutex);
     if ( m_pSensorFrame && IsNewTimestamp( m_pSensorFrame ) )
@@ -360,48 +359,8 @@ winrt::com_array<uint8_t> RMCameraReader::getVlcSensorData(uint64_t& timestamp, 
           }
         }
 
-        // DEBUG JMH
-        {
-
-          auto timestamp = PerceptionTimestampHelper::FromSystemRelativeTargetTime(
-              HundredsOfNanoseconds( checkAndConvertUnsigned( m_prevTimestamp ) ) );
-          auto location = m_locator.TryLocateAtTimestamp( timestamp, unitySpatialCoordinateSytem );
-
-          if ( !location )
-          {
-            return winrt::com_array<uint8_t>();
-          }
-
-          const float4x4 dynamicNodeToCoordinateSystem =
-              make_float4x4_from_quaternion( location.Orientation() ) *
-              make_float4x4_translation( location.Position() );
-          auto absoluteTimestamp = m_converter
-                                       .RelativeTicksToAbsoluteTicks(
-                                           HundredsOfNanoseconds( (long long)m_prevTimestamp ) )
-                                       .count();
-
-          m_frameLocation = FrameLocation{ absoluteTimestamp, dynamicNodeToCoordinateSystem };
-        }
-
-        std::array<double, 16> VLCtoWorldtransform_values;
-        //VLCtoWorldtransform_values[0] = m_frameLocation.rigToWorldtransform.m11;
-        //VLCtoWorldtransform_values[1] = m_frameLocation.rigToWorldtransform.m12;
-        //VLCtoWorldtransform_values[2] = m_frameLocation.rigToWorldtransform.m13;
-        //VLCtoWorldtransform_values[3] = m_frameLocation.rigToWorldtransform.m14;
-        //VLCtoWorldtransform_values[4] = m_frameLocation.rigToWorldtransform.m21;
-        //VLCtoWorldtransform_values[5] = m_frameLocation.rigToWorldtransform.m22;
-        //VLCtoWorldtransform_values[6] = m_frameLocation.rigToWorldtransform.m23;
-        //VLCtoWorldtransform_values[7] = m_frameLocation.rigToWorldtransform.m24;
-        //VLCtoWorldtransform_values[8] = m_frameLocation.rigToWorldtransform.m31;
-        //VLCtoWorldtransform_values[9] = m_frameLocation.rigToWorldtransform.m32;
-        //VLCtoWorldtransform_values[10] = m_frameLocation.rigToWorldtransform.m33;
-        //VLCtoWorldtransform_values[11] = m_frameLocation.rigToWorldtransform.m34;
-        //VLCtoWorldtransform_values[12] = m_frameLocation.rigToWorldtransform.m41;
-        //VLCtoWorldtransform_values[13] = m_frameLocation.rigToWorldtransform.m42;
-        //VLCtoWorldtransform_values[14] = m_frameLocation.rigToWorldtransform.m43;
-        //VLCtoWorldtransform_values[15] = m_frameLocation.rigToWorldtransform.m44;
-
         // Matrix needs to be transposed for SolAR
+        std::array<double, 16> VLCtoWorldtransform_values;
         VLCtoWorldtransform_values[0] = m_frameLocation.rigToWorldtransform.m11;
         VLCtoWorldtransform_values[1] = m_frameLocation.rigToWorldtransform.m21;
         VLCtoWorldtransform_values[2] = m_frameLocation.rigToWorldtransform.m31;
