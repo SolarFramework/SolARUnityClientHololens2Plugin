@@ -359,25 +359,8 @@ winrt::com_array<uint8_t> RMCameraReader::getVlcSensorData(uint64_t& timestamp, 
           }
         }
 
-        std::array<double, 16> VLCtoWorldtransform_values;
-        //VLCtoWorldtransform_values[0] = m_frameLocation.rigToWorldtransform.m11;
-        //VLCtoWorldtransform_values[1] = m_frameLocation.rigToWorldtransform.m12;
-        //VLCtoWorldtransform_values[2] = m_frameLocation.rigToWorldtransform.m13;
-        //VLCtoWorldtransform_values[3] = m_frameLocation.rigToWorldtransform.m14;
-        //VLCtoWorldtransform_values[4] = m_frameLocation.rigToWorldtransform.m21;
-        //VLCtoWorldtransform_values[5] = m_frameLocation.rigToWorldtransform.m22;
-        //VLCtoWorldtransform_values[6] = m_frameLocation.rigToWorldtransform.m23;
-        //VLCtoWorldtransform_values[7] = m_frameLocation.rigToWorldtransform.m24;
-        //VLCtoWorldtransform_values[8] = m_frameLocation.rigToWorldtransform.m31;
-        //VLCtoWorldtransform_values[9] = m_frameLocation.rigToWorldtransform.m32;
-        //VLCtoWorldtransform_values[10] = m_frameLocation.rigToWorldtransform.m33;
-        //VLCtoWorldtransform_values[11] = m_frameLocation.rigToWorldtransform.m34;
-        //VLCtoWorldtransform_values[12] = m_frameLocation.rigToWorldtransform.m41;
-        //VLCtoWorldtransform_values[13] = m_frameLocation.rigToWorldtransform.m42;
-        //VLCtoWorldtransform_values[14] = m_frameLocation.rigToWorldtransform.m43;
-        //VLCtoWorldtransform_values[15] = m_frameLocation.rigToWorldtransform.m44;
-
         // Matrix needs to be transposed for SolAR
+        std::array<double, 16> VLCtoWorldtransform_values;
         VLCtoWorldtransform_values[0] = m_frameLocation.rigToWorldtransform.m11;
         VLCtoWorldtransform_values[1] = m_frameLocation.rigToWorldtransform.m21;
         VLCtoWorldtransform_values[2] = m_frameLocation.rigToWorldtransform.m31;
@@ -901,6 +884,10 @@ bool RMCameraReader::updateFrameLocation()
 
     auto timestamp = PerceptionTimestampHelper::FromSystemRelativeTargetTime(HundredsOfNanoseconds(checkAndConvertUnsigned(m_prevTimestamp)));
     auto location = m_locator.TryLocateAtTimestamp(timestamp, m_worldCoordSystem);
+
+    //ISpatialCoordinateSystem* m_UnitySpatialCoordinateSystem = nullptr;
+    //spatialCoordinateSystem.as<IUnknown>()->QueryInterface(winrt::guid_of<ISpatialCoordinateSystem>(), (void**)(&m_UnitySpatialCoordinateSystem));
+    //auto location = m_locator.TryLocateAtTimestamp(timestamp, m_worldCoordSystem);
 
     if (!location)
     {

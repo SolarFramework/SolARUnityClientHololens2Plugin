@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+//import "unknwn.idl"; 
+
 namespace SolARHololens2UnityPlugin
 {
 
@@ -33,6 +35,8 @@ enum RMSensorType
 
 runtimeclass SolARHololens2ResearchMode
 {
+    void SetSpatialCoordinateSystem( Windows.Perception.Spatial.SpatialCoordinateSystem spatialCoordinateSystem );
+
     // TODO(jmhenaff): see if builder is possible
     // Ex: x = builder().EnablePv().EnableVlc(LEFT_FRONT).build(); x.start():
     void Init();

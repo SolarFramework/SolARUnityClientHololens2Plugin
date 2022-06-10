@@ -46,6 +46,11 @@ typedef std::chrono::duration<int64_t, std::ratio<1, 10'000'000>> HundredsOfNano
 namespace winrt::SolARHololens2UnityPlugin::implementation
 {
 
+    void SolARHololens2ResearchMode::SetSpatialCoordinateSystem( Windows::Perception::Spatial::SpatialCoordinateSystem unitySpatialCoodinateSystem)
+    {
+        m_UnitySpatialCoordinateSystem = unitySpatialCoodinateSystem;
+    }
+
     void SolARHololens2ResearchMode::Init()
     {
         m_recording = false;
@@ -261,7 +266,7 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
             m_recording = true;
         }
 
-        auto worldCoordinate = m_mixedReality.GetWorldCoordinateSystem();
+        auto worldCoordinate = m_UnitySpatialCoordinateSystem; // m_mixedReality.GetWorldCoordinateSystem();
 
         if (m_sensorScenario)
         {
