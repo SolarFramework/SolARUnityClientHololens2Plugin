@@ -84,6 +84,7 @@ public:
 		//m_pWriteThread->join();
 	}
 
+	bool computeIntrinsics(float& fx, float& fy, float& cx, float& cy, float& avgReprojErr);
 //	winrt::com_array<uint8_t> getSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height);
 	winrt::com_array<uint8_t> getVlcSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height, bool flip);
 	winrt::com_array<uint16_t> getDepthSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height);

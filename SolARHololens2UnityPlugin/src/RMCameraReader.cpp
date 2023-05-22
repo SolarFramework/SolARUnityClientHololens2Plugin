@@ -284,6 +284,128 @@ void RMCameraReader::DumpFrameLocations()
     m_frameLocations.clear();
 }
 
+bool RMCameraReader::computeIntrinsics( float& fx, float& fy, float& cx, float& cy, float& avgReprojErr )
+{
+  // TODO: use a code similar to the following one to get resolution dynamically
+  // This does not work currently because camera must be started for m_pSensorFrame to
+  // hold a value.
+  // Get frame resolution (could also be stored once at the beginning of the capture)
+  // ResearchModeSensorResolution resolution;
+  //{
+  //  std::lock_guard<std::mutex> guard( m_sensorFrameMutex );
+  //  // Assuming we are at the end of the capture
+  //  assert( m_pSensorFrame != nullptr );
+  //  winrt::check_hresult( m_pSensorFrame->GetResolution( &resolution ) );
+  //}
+
+  size_t sensorFrameWidth = 640;
+  size_t sensorFrameHeight = 480;
+
+  // Get camera sensor object
+  IResearchModeCameraSensor* pCameraSensor = nullptr;
+  HRESULT hr = m_pRMSensor->QueryInterface( IID_PPV_ARGS( &pCameraSensor ) );
+  winrt::check_hresult( hr );
+
+  // <u, v> pixel coordinates - <x,y,1> 3D camera coordinates
+  std::vector<std::pair<std::array<float, 2>, std::array<float, 3>>> correspondences;
+  float uv[2];
+  float xy[2];
+  for ( size_t y = 0; y < sensorFrameHeight; y++ )
+  {
+    uv[1] = ( y + 0.5f );
+    for ( size_t x = 0; x < sensorFrameWidth; x++ )
+    {
+      uv[0] = ( x + 0.5f );
+      hr = pCameraSensor->MapImagePointToCameraUnitPlane( uv, xy );
+      correspondences.push_back({ {uv[0], uv[1]}, {xy[0], xy[1], FAILED( hr ) ? 0.f : 1.f} });
+    }
+  }
+
+  // Now correspondences are available, estimate fx, fy, cx, cy from them
+  // https://github.com/siatheindochinese/LUT_to_K
+  // solve 2x2 linear systems
+  // Ax * [fx, cx]^T = bx
+  // Ay * [fy, cy]^T = by
+
+  // solution which does not depend on any third-party libs, you may use Eigen which will make
+  // things much easier
+  int numLines = static_cast<int>( correspondences.size() );
+  std::vector<std::array<float, 2>> Ax( numLines ), Ay( numLines );
+  std::vector<float> bx( numLines ), by( numLines );
+  for ( int i = 0; i < numLines; ++i )
+  {
+    Ax[i] = { correspondences[i].second[0], 1.f };
+    bx[i] = correspondences[i].first[0];
+    Ay[i] = { correspondences[i].second[1], 1.f };
+    by[i] = correspondences[i].first[1];
+  }
+
+  // least square method
+  // Ax^T * Ax * [fx, cx]^T = Ax^T * bx
+  // same for fy, cy
+  std::array<std::array<float, 2>, 2> AxTAx, AyTAy;
+  for ( int r = 0; r < 2; ++r )
+  {
+    for ( int c = 0; c < 2; ++c )
+    {
+      float sum = 0.f;
+      for ( int i = 0; i < numLines; ++i ) sum += Ax[i][r] * Ax[i][c];
+      AxTAx[r][c] = sum;
+      sum = 0.f;
+      for ( int i = 0; i < numLines; ++i ) sum += Ay[i][r] * Ay[i][c];
+      AyTAy[r][c] = sum;
+    }
+  }
+
+  std::array<float, 2> AxTbx = { 0.f, 0.f };
+  std::array<float, 2> AyTby = { 0.f, 0.f };
+  for ( int i = 0; i < numLines; i++ )
+  {
+    for ( int r = 0; r < 2; ++r )
+    {
+      AxTbx[r] += Ax[i][r] * bx[i];
+      AyTby[r] += Ay[i][r] * by[i];
+    }
+  }
+
+  // inverse matrix of AxTbx & AyTby
+  float det_AxTAx = AxTAx[0][0] * AxTAx[1][1] - AxTAx[0][1] * AxTAx[1][0];
+  float det_AyTAy = AyTAy[0][0] * AyTAy[1][1] - AyTAy[0][1] * AyTAy[1][0];
+
+  std::array<std::array<float, 2>, 2> inv_AxTAx, inv_AyTAy;
+
+  inv_AxTAx[0][0] = AxTAx[1][1] / det_AxTAx;
+  inv_AxTAx[0][1] = -AxTAx[0][1] / det_AxTAx;
+  inv_AxTAx[1][1] = AxTAx[0][0] / det_AxTAx;
+  inv_AxTAx[1][0] = -AxTAx[1][0] / det_AxTAx;
+
+  inv_AyTAy[0][0] = AyTAy[1][1] / det_AyTAy;
+  inv_AyTAy[0][1] = -AyTAy[0][1] / det_AyTAy;
+  inv_AyTAy[1][1] = AyTAy[0][0] / det_AyTAy;
+  inv_AyTAy[1][0] = -AyTAy[1][0] / det_AyTAy;
+
+  // compute fx, cx, fy, cy
+  fx = inv_AxTAx[0][0] * AxTbx[0] + inv_AxTAx[0][1] * AxTbx[1];
+  cx = inv_AxTAx[1][0] * AxTbx[0] + inv_AxTAx[1][1] * AxTbx[1];
+  fy = inv_AyTAy[0][0] * AyTby[0] + inv_AyTAy[0][1] * AyTby[1];
+  cy = inv_AyTAy[1][0] * AyTby[0] + inv_AyTAy[1][1] * AyTby[1];
+
+  // std::cout << "fx = " << fx << "\ncx = " << cx << "\nfy = " << fy << "\ncy = " << cy << std::endl;
+
+  // compute average reprojection error
+  avgReprojErr = 0.f;
+  for ( const auto& v : correspondences )
+  {
+    float dx = v.second[0] * fx + cx - v.first[0];
+    float dy = v.second[1] * fy + cy - v.first[1];
+    avgReprojErr += std::sqrt( dx * dx + dy * dy );
+  }
+  avgReprojErr /= static_cast<float>( numLines );
+  // std::cout << "Average reprojection error = " << errReproj << std::endl;
+
+  return true;
+}
+
 winrt::com_array<uint8_t> RMCameraReader::getVlcSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height, bool flip)
 {
     std::lock_guard<std::mutex> reader_guard(m_sensorFrameMutex);

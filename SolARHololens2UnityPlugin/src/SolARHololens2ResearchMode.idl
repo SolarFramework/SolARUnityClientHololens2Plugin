@@ -42,6 +42,7 @@ runtimeclass SolARHololens2ResearchMode
     void Init();
     void EnablePv();
     void EnableVlc(RMSensorType sensorType);
+
     void EnableDepth(Boolean isLongThrow);
     void Update();
     Boolean EnableRecording();
@@ -62,6 +63,13 @@ runtimeclass SolARHololens2ResearchMode
     UInt32 GetPvWidth();
     UInt32 GetPvHeight();
 
+    Boolean ComputeIntrinsics(
+        RMSensorType sensor,
+        out float fx,
+        out float fy,
+        out float cx,
+        out float cy,
+        out float avgReprojErr);
 
     UInt8[] GetVlcData(
         RMSensorType sensor,

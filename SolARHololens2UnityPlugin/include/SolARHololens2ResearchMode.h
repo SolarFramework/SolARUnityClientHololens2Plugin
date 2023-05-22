@@ -87,6 +87,12 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
         void StopRMSensor(RMSensorType sensor);
         uint32_t GetVlcWidth(RMSensorType sensor);
         uint32_t GetVlcHeight(const RMSensorType sensor);
+        bool ComputeIntrinsics( const RMSensorType sensor,
+                                float& fx,
+                                float& fy,
+                                float& cx,
+                                float& cy,
+                                float& avgReprojErr );
         com_array<uint8_t> GetVlcData( const RMSensorType sensor,
                                        uint64_t& timestamp,
                                        com_array<double>& PVtoWorldtransform,

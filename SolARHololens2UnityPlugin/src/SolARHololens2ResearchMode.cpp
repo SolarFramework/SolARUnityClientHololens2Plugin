@@ -451,6 +451,17 @@ namespace winrt::SolARHololens2UnityPlugin::implementation
       return m_sensorScenario->m_cameraReaders[toHololensRMSensorType( sensor )]->getHeight();
     }
 
+    bool SolARHololens2ResearchMode::ComputeIntrinsics(
+        const RMSensorType sensor,
+        float& fx,
+        float& fy,
+        float& cx,
+        float& cy,
+        float& avgReprojErr )
+    {
+        return m_sensorScenario->m_cameraReaders[toHololensRMSensorType( sensor )]->computeIntrinsics(fx, fy, cx, cy, avgReprojErr);
+    }
+
     com_array<uint8_t> SolARHololens2ResearchMode::GetVlcData(
         const RMSensorType sensor,
         uint64_t& timestamp,
