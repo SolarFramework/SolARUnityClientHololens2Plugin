@@ -409,14 +409,7 @@ bool RMCameraReader::computeIntrinsics( float& fx, float& fy, float& cx, float& 
 winrt::com_array<uint8_t> RMCameraReader::getVlcSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height, bool flip)
 {
     std::lock_guard<std::mutex> reader_guard(m_sensorFrameMutex);
-    if ( m_pSensorFrame
-        // Don't check this, so that we always return somthing.
-        // Otherwise is problematic with stereo mode where we need to
-        // drop a call because of having only one image, which may lead to
-        // tracking loss.
-        // TODO(jmhenaff): cache com_array<UINT8> result in order to avoid useless
-        // computation (already done since it's the same frame)
-        /* && IsNewTimestamp( m_pSensorFrame ) */ )
+    if ( m_pSensorFrame && IsNewTimestamp( m_pSensorFrame ) )
     {
         timestamp = static_cast<uint64_t>(m_prevTimestamp);
 
