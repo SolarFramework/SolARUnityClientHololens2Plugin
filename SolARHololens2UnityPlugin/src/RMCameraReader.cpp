@@ -409,7 +409,9 @@ bool RMCameraReader::computeIntrinsics( float& fx, float& fy, float& cx, float& 
 winrt::com_array<uint8_t> RMCameraReader::getVlcSensorData(uint64_t& timestamp, winrt::com_array<double>& PVtoWorldtransform, uint32_t& pixelBufferSize, uint32_t& width, uint32_t& height, bool flip)
 {
     std::lock_guard<std::mutex> reader_guard(m_sensorFrameMutex);
-    if ( m_pSensorFrame && IsNewTimestamp( m_pSensorFrame ) )
+    // Call this only to update m_prevTimestamp
+    IsNewTimestamp( m_pSensorFrame );
+    if ( m_pSensorFrame )
     {
         timestamp = static_cast<uint64_t>(m_prevTimestamp);
 
